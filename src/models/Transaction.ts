@@ -5,7 +5,8 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn } from 'typeorm';
+  UpdateDateColumn,
+} from 'typeorm';
 
 import Category from './Category';
 
@@ -17,7 +18,7 @@ class Transaction {
   @Column()
   title: string;
 
-  @Column()
+  @Column('decimal')
   value: number;
 
   @Column()

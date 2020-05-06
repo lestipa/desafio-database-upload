@@ -12,14 +12,14 @@ interface File {
   csvFilename: string;
 }
 
-interface Request {
+interface TransactionCSV {
   title: string;
   type: 'income' | 'outcome';
   value: number;
   category: string;
 }
 
-async function loadCSV(csvFilePath: string): Promise<Request[]> {
+async function loadCSV(csvFilePath: string): Promise<TransactionCSV[]> {
   try {
     const readCSVStream = fs.createReadStream(csvFilePath);
 
@@ -31,7 +31,7 @@ async function loadCSV(csvFilePath: string): Promise<Request[]> {
 
     const parseCSV = readCSVStream.pipe(parseStream);
 
-    const lines: Request[] = [];
+    const lines: TransactionCSV[] = [];
 
     parseCSV.on('data', line => {
       const [title, type, value, category] = line;
@@ -61,7 +61,7 @@ class ImportTransactionsService {
     const transactionsDB: Transaction[] = [];
 
     await Promise.all(
-      transactions.map(async (transaction: Request) => {
+      transactions.map(async (transaction: TransactionCSV) => {
         const { title, type, value, category } = transaction;
 
         const newTransaction = await createTransaction.execute({
@@ -72,14 +72,11 @@ class ImportTransactionsService {
         });
 
         transactionsDB.push(newTransaction);
-
-        console.log('dentro', transactionsDB);
       }),
     );
 
     await fs.promises.unlink(csvFile);
 
-    console.log('fora', transactionsDB);
     return transactionsDB;
   }
 }

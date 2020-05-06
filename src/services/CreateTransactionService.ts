@@ -30,7 +30,9 @@ class CreateTransactionService {
     const categoriesRepository = getRepository(Category);
 
     let categoryExists = await categoriesRepository.findOne({
-      title: category,
+      where: {
+        title: category,
+      },
     });
 
     if (!categoryExists) {
@@ -39,10 +41,10 @@ class CreateTransactionService {
       await categoriesRepository.save(categoryExists);
     }
 
-    const category_id = categoryExists.id;
+    // const category_id = categoryExists.id;
 
-    const balance = await transactionsRepository.getBalance();
-    if (type === 'outcome' && balance.total < value) {
+    const { total } = await transactionsRepository.getBalance();
+    if (type === 'outcome' && total < value) {
       throw new AppError('Insufficient funds for this operation');
     }
 
@@ -50,7 +52,8 @@ class CreateTransactionService {
       title,
       type,
       value,
-      category_id,
+      category: categoryExists,
+      // category_id,
     });
 
     await transactionsRepository.save(transaction);

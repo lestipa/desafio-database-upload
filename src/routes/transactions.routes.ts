@@ -40,9 +40,9 @@ transactionsRouter.delete('/:id', async (request, response) => {
 
   const deleteTransaction = new DeleteTransactionService();
 
-  await deleteTransaction.execute({ id });
+  await deleteTransaction.execute(id);
 
-  return response.status(204).json();
+  return response.status(204).send();
 });
 
 transactionsRouter.post(

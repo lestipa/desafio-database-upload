@@ -1,7 +1,11 @@
-import {MigrationInterface, QueryRunner, Table, TableForeignKey, CreateDateColumn} from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export default class Transaction1588523922754 implements MigrationInterface {
-
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -21,7 +25,7 @@ export default class Transaction1588523922754 implements MigrationInterface {
           },
           {
             name: 'value',
-            type: 'numeric',
+            type: 'decimal',
             precision: 15,
             scale: 2,
             isNullable: false,
